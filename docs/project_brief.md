@@ -1,0 +1,57 @@
+# Project Brief / Resumen del Proyecto
+
+## ES — Objetivo
+Analizar el comportamiento temprano de usuarios en un ecommerce y detectar qué acciones explican por qué algunos usuarios avanzan hacia intención de compra.
+
+## ES — Métricas
+**Métrica principal (éxito):**
+- **Activación = Add to Cart en 72h**: porcentaje de usuarios que realizan `add_to_cart` dentro de los primeros ~3 días desde su primera actividad (aprox. por fecha).
+
+**Métrica secundaria (calidad, sin solapamiento):**
+- **Retención post-72h (día 4–30)**: porcentaje de usuarios con actividad entre `first_date + 4` y `first_date + 30`.  
+  *Nota:* se usa para evaluar “calidad” sin mezclar el retorno inmediato (días 1–3) con la ventana temprana.
+
+**Preguntas que queremos responder:**
+1) ¿Qué % de usuarios llega a `add_to_cart` en las primeras 72h?
+2) ¿Qué pasos previos (por ejemplo búsqueda → ver producto) están fallando y para qué tipo de usuarios?
+3) ¿Qué segmentos tempranos (basados en comportamiento) tienen mejor avance hacia carrito?
+4) ¿Qué acciones concretas (mejoras de UX/merchandising) aumentarían la activación?
+
+**Datos**
+- Fuente: `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*` (GA4 sample ecommerce).
+- Usuario: `user_pseudo_id`.
+- Ventana temprana: desde `first_date` hasta `first_date + 3 days` (aproximación por día calendario).
+
+**Entrega final**
+- Dataset listo para Tableau.
+- Dashboard con funnel y rendimiento por segmento.
+- Recomendaciones accionables basadas en datos.
+
+---
+
+## EN — Goal
+Analyze early user behavior in an ecommerce dataset to understand what drives users toward purchase intent and where the journey breaks.
+
+## EN — Metrics
+**Primary success metric:**
+- **Activation = Add to Cart within 72h**: % of users who trigger `add_to_cart` within the first ~3 days since their first activity (calendar-day approximation).
+
+**Secondary metric (quality, non-overlapping):**
+- **Post-72h retention (days 4–30)**: % of users with activity between `first_date + 4` and `first_date + 30`.  
+  *Note:* used as a quality metric without mixing immediate return (days 1–3) into the early window.
+  
+**Questions we want to answer:**
+1) What % of users reaches `add_to_cart` within the first 72h?
+2) Which upstream steps (e.g., search → product view) are failing, and for which users?
+3) Which early behavior segments perform best on activation?
+4) What concrete UX/merchandising actions would increase activation?
+
+**Data**
+- Source: `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*` (GA4 sample ecommerce).
+- User key: `user_pseudo_id`.
+- Early window: `first_date` to `first_date + 3 days` (calendar-day approximation).
+
+**Final deliverables**
+- Tableau-ready dataset.
+- Dashboard with funnel + segment performance.
+- Data-driven, actionable recommendations.
