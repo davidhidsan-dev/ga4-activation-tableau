@@ -53,6 +53,7 @@ rates AS (
   SELECT
     segment_72h,
     COUNT(*) AS users,
+    SUM(add_to_cart_72h) AS activated_users,
     SAFE_DIVIDE(SUM(add_to_cart_72h), COUNT(*)) AS activation_rate
   FROM base
   WHERE segment_72h IN ('searcher_only_72h', 'product_viewer_scroll_72h', 'product_viewer_no_scroll_72h')
@@ -62,17 +63,22 @@ pivot AS (
   SELECT
     MAX(IF(segment_72h='searcher_only_72h', users, NULL)) AS searcher_users,
     MAX(IF(segment_72h='searcher_only_72h', activation_rate, NULL)) AS searcher_activation_rate,
-    -- use average activation of product viewers as "target" if they reached product pages
-    AVG(IF(segment_72h IN ('product_viewer_scroll_72h','product_viewer_no_scroll_72h'), activation_rate, NULL)) AS viewer_activation_rate_avg
+
+    -- weighted average activation rate across BOTH viewer segments
+    SAFE_DIVIDE(
+      SUM(IF(segment_72h IN ('product_viewer_scroll_72h','product_viewer_no_scroll_72h'), activated_users, 0)),
+      SUM(IF(segment_72h IN ('product_viewer_scroll_72h','product_viewer_no_scroll_72h'), users, 0))
+    ) AS viewer_activation_rate_weighted
+
   FROM rates
 )
 SELECT
   scenario_move_to_viewer_pct,
   searcher_users,
   searcher_activation_rate,
-  viewer_activation_rate_avg,
-  (viewer_activation_rate_avg - searcher_activation_rate) AS rate_diff,
-  ROUND(searcher_users * scenario_move_to_viewer_pct * (viewer_activation_rate_avg - searcher_activation_rate)) AS expected_extra_add_to_cart
+  viewer_activation_rate_weighted,
+  (viewer_activation_rate_weighted - searcher_activation_rate) AS rate_diff,
+  ROUND(searcher_users * scenario_move_to_viewer_pct * (viewer_activation_rate_weighted - searcher_activation_rate)) AS expected_extra_add_to_cart
 FROM pivot,
 UNNEST([0.05, 0.10, 0.20]) AS scenario_move_to_viewer_pct
 ORDER BY scenario_move_to_viewer_pct;
