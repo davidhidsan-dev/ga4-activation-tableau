@@ -4,6 +4,7 @@ WITH first_seen AS (
     MIN(PARSE_DATE("%Y%m%d", event_date)) AS first_date
   FROM `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`
   GROUP BY user_pseudo_id
+  HAVING first_date >= DATE '2020-11-25'
 ),
 events_72h AS (
   SELECT
