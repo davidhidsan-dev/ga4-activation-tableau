@@ -1,5 +1,9 @@
 -- Purpose: Estimate potential uplift in add_to_cart by improving search -> product view for searcher_only users
 
+-- Note: What-if estimate (not causal).
+-- Assumption: A fraction of searcher_only users will behave like product viewers after search improvements.
+-- Viewer benchmark uses WEIGHTED activation rate across viewer segments.
+
 WITH base AS (
   -- Reuse the segments + activation flags at user level (72h)
   WITH first_seen AS (
