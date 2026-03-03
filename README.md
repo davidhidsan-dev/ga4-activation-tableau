@@ -45,8 +45,7 @@
 3) Construir el dashboard en Tableau usando las tablas exportadas.
 
 ## ES — Dashboard
-- Añade aquí tu enlace de Tableau Public: **(TODO)**
-- Vistas recomendadas: KPI Overview, Segments, Search Funnel, Quality (post-72h), Propensity deciles.
+- Dashboard (Tableau Public): https://public.tableau.com/app/profile/david.hidalgo.s.nchez/viz/Libro1_17724829569200/Dashboard1?publish=yes
 
 ---
 
@@ -95,5 +94,4 @@
 3) Build the dashboard in Tableau using the exported tables.
 
 ## EN — Dashboard
-- Add your Tableau Public link here: **(TODO)**
-- Recommended views: KPI Overview, Segments, Search Funnel, Quality (post-72h), Propensity deciles.
+- Dashboard (Tableau Public): https://public.tableau.com/app/profile/david.hidalgo.s.nchez/viz/Libro1_17724829569200/Dashboard1?publish=yes
