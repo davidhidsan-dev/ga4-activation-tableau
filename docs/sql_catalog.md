@@ -337,3 +337,29 @@ Most analyses apply `first_date >= 2020-11-25` (see `docs/data_notes.md`) to avo
   * `step_order`
   * `step_name`
   * `users`
+
+---
+
+## 13_tableau_propensity_deciles.sql
+
+### ES
+
+* **Qué hace:** puntúa usuarios con el modelo `model_activation_72h_logreg_v1` y los agrupa en **deciles de propensión** (1=baja, 10=alta) según `p_activate = P(add_to_cart_72h=1)`.
+* **Importante:** es un resumen **agregado** para validar ranking/calibración (no es causal). Puede haber empates de probabilidad si hay pocos patrones de features.
+* **Output:** tabla con:
+
+  * `propensity_decile`
+  * `users`
+  * `avg_predicted_prob`
+  * `actual_activation_rate`
+
+### EN
+
+* **What it does:** scores users using `model_activation_72h_logreg_v1` and bins them into **propensity deciles** (1=low, 10=high) based on `p_activate = P(add_to_cart_72h=1)`.
+* **Important:** aggregated summary to check ranking/calibration (non-causal). Tied probabilities can happen if feature patterns are limited.
+* **Output:** table with:
+
+  * `propensity_decile`
+  * `users`
+  * `avg_predicted_prob`
+  * `actual_activation_rate`
