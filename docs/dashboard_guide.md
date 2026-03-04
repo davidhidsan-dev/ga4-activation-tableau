@@ -5,7 +5,7 @@
 Enlace Tableau Public:
 Pega aquí tu link final (ejemplo):
 
-* Dashboard: https://public.tableau.com/app/profile/david.hidalgo.s.nchez/viz/Libro1_17724829569200/Dashboard1?publish=yes
+* Dashboard: https://public.tableau.com/views/GA4ActivationDiagnostics72hSegmentationFunnel/Dashboard1?:language=es-ES&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link
 
 ## ES — Qué contiene (vistas)
 
@@ -65,7 +65,7 @@ Pega aquí tu link final (ejemplo):
 Tableau Public link:
 Paste your final link here (example):
 
-* Dashboard: https://public.tableau.com/app/profile/david.hidalgo.s.nchez/viz/Libro1_17724829569200/Dashboard1?publish=yes
+* Dashboard: https://public.tableau.com/views/GA4ActivationDiagnostics72hSegmentationFunnel/Dashboard1?:language=es-ES&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link
 
 ## EN — What’s inside (views)
 
