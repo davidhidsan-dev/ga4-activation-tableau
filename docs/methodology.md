@@ -3,7 +3,7 @@
 ## ES — Ventanas temporales
 
 * `first_date`: primer día con actividad del usuario (parseado desde `event_date`).
-* Ventana 72h (aprox por día calendario): `first_date` … `first_date + 3 days`.
+* La ventana “72h” se aproxima por día calendario: `first_date` a `first_date + 3 days` (incluye día 0–3).
 * Calidad (sin solapamiento): retención post-72h = actividad entre `first_date + 4` … `first_date + 30`.
 
 ## ES — Por qué “usuario” vs “sesión”
@@ -30,7 +30,7 @@ Al detectar días con casi cero `add_to_cart`, restringimos a `first_date >= 202
 ## EN — Time windows
 
 * `first_date`: user's first active day (parsed from `event_date`).
-* 72h window (calendar-day approximation): `first_date` … `first_date + 3 days`.
+* The “72h” window is a calendar-day approximation: `first_date` to `first_date + 3 days` (includes day 0–3).
 * Quality metric (non-overlapping): post-72h retention = activity in `first_date + 4` … `first_date + 30`.
 
 ## EN — Why “user” vs “session”

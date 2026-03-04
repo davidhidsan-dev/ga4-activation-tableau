@@ -15,8 +15,8 @@ Creamos segmentos basados en comportamiento temprano (sin usar `add_to_cart` par
 
 **Hallazgos clave**
 1) **Descubrimiento de producto (búsqueda)**
-- Global: Search → Product View por sesión ≈ **46.9%**.
-- Segmento crítico `searcher_only_72h`: Search → Product View por sesión ≈ **0.32%** (casi nadie llega a producto).
+- Global: Search → Product View **a nivel sesión** (usuarios en scope) ≈ **46.9%**.
+- Segmento crítico searcher_only_72h: Search → Product View **a nivel sesión** (usuarios en scope) ≈ **0.32%** (casi nadie llega a producto).
 
 2) **Enganche en página de producto (scroll)**
 - `product_viewer_scroll_72h` activa mucho más que `product_viewer_no_scroll_72h`:
@@ -46,8 +46,8 @@ We created early behavior segments (without using `add_to_cart` to define segmen
 
 **Key findings**
 1) **Product discovery (search)**
-- Overall: session-level Search → Product View ≈ **46.9%**.
-- Critical segment `searcher_only_72h`: session-level Search → Product View ≈ **0.32%** (almost no product views).
+- Overall: session-level Search → Product View (scoped users) ≈ **46.9%**.
+- Critical segment searcher_only_72h: session-level Search → Product View (scoped users) ≈ **0.32%** (almost no product views).
 
 2) **Product page engagement (scroll)**
 - `product_viewer_scroll_72h` activates far more than `product_viewer_no_scroll_72h`:

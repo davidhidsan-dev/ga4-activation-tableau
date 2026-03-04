@@ -5,10 +5,11 @@
 
 **Dataset:** GA4 public sample ecommerce (BigQuery).  
 **Cohorte:** `first_date >= 25/11/2020`.  
-**Ventana:** eventos dentro de las **primeras 72h** desde `first_date`.
+**Ventana temprana:** eventos en D0–D3 desde first_date (aprox. “72h” por día calendario).
 
 **Métrica principal:** **Add-to-cart rate (72h)** (usuarios únicos).  
-**Métricas de diagnóstico:** Search → Product View rate (72h), funnel de búsqueda, activación por segmentos (72h), y calibración de un modelo de propensión.
+**Métricas de diagnóstico:** Search → Product View rate (session-level, para usuarios en scope), funnel de búsqueda, activación por segmentos (72h), y calibración de un modelo de propensión.
+**Nota:** el proxy de búsqueda se calcula por sesión y no se limita a la ventana temprana.
 
 **Insights clave (high-level):**
 - La mayor caída ocurre en **Search → View item** (bottleneck de descubrimiento).
@@ -29,12 +30,11 @@
 
 ## ES — Datos y definiciones (high-level)
 - **first_date:** primera fecha observada por usuario (`MIN(event_date)`).
-- **Ventana 72h:** `first_date` → `first_date + 3 días` (aprox 72h).
+- **Ventana temprana (72h):** `first_date` → `first_date + 3 días` (D0–D3, por día calendario).
 - **Activación (72h):** usuario con al menos un `add_to_cart` dentro de 72h.
 - **Searchers:** usuarios con al menos un `view_search_results` dentro de 72h.
 - **Segmentos (72h):** reglas basadas en comportamiento temprano (ver SQL).
 
-**Nota:** la ventana “72h” se aproxima por día calendario (event_date): D0–D3 desde first_date.
 
 ## ES — Estructura del repositorio
 - `/sql` → todas las queries de BigQuery usadas en el proyecto
@@ -56,10 +56,11 @@
 
 **Dataset:** GA4 public sample ecommerce (BigQuery).  
 **Cohort:** `first_date >= 2020-11-25`.  
-**Window:** events within the **first 72h** from `first_date`.
+**Early window:** events in D0–D3 from first_date (calendar-day “72h” approximation).
 
 **North-star metric:** **Add-to-cart rate (72h)** (unique users).  
-**Diagnostic metrics:** Search → Product View rate (72h), search funnel, activation by 72h segments, and propensity model calibration.
+**Diagnostic metrics:** Search → Product View rate (session-level, scoped users), search funnel, activation by 72h segments, and propensity model calibration.
+**Note:** the search proxy is computed at session level and is not restricted to the early window.
 
 **Key insights (high-level):**
 - The largest drop occurs at **Search → View item** (discovery bottleneck).
@@ -80,7 +81,7 @@
 
 ## EN — Data & definitions (high-level)
 - **first_date:** first observed event date per user (`MIN(event_date)`).
-- **72h window:** `first_date` → `first_date + 3 days` (~72h).
+- **Early window (approx. 72h):** `first_date` → `first_date + 3 days` (D0-D3, calendar day).
 - **Activation (72h):** user has at least one `add_to_cart` event within 72h.
 - **Searchers:** users with at least one `view_search_results` within 72h.
 - **Segments (72h):** rule-based categories from early behavior (see SQL).
