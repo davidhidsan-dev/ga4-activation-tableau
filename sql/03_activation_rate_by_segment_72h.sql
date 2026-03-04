@@ -1,6 +1,18 @@
--- Purpose: Activation (add_to_cart within 72h) by early behavior segment (no circular definitions)
--- Scope: users with first_date >= 2020-11-25
--- Dataset: bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*
+-- ES
+-- Propósito: Calcular activación 72h por segmento de comportamiento temprano (sin definiciones circulares).
+-- Alcance: usuarios con first_date >= 2020-11-25 (ver docs/data_notes.md).
+-- Ventana (v1): aproximación por día calendario con event_date (D0–D3 desde first_date).
+-- Segmentación: reglas por prioridad (buyer > checkout > viewer_scroll > viewer_no_scroll > searcher_only > low_engagement).
+-- Grano: usuario (1 fila por usuario) agregada a segmento.
+-- Output: segment_72h, users_total, users_activated_72h, activation_rate_72h.
+
+-- EN
+-- Purpose: Compute 72h activation by early behavior segment (no circular segment definitions).
+-- Scope: users with first_date >= 2020-11-25 (see docs/data_notes.md).
+-- Window (v1): calendar-day approximation using event_date (D0–D3 from first_date).
+-- Segmentation: priority-based rules (buyer > checkout > viewer_scroll > viewer_no_scroll > searcher_only > low_engagement).
+-- Grain: user-level (one row per user) aggregated to segment.
+-- Output: segment_72h, users_total, users_activated_72h, activation_rate_72h.
 
 WITH first_seen AS (
   SELECT

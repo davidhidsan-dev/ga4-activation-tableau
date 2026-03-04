@@ -1,9 +1,25 @@
--- Sequential funnel (72h): Search -> View item -> Add to cart -> Begin checkout -> Purchase
--- Approach:
--- 1) Build first_date per user (cohort start)
--- 2) Keep events within first 72h window
--- 3) For each user, compute FIRST timestamp of each funnel event
--- 4) Count users that satisfy sequential order constraints
+-- ES
+-- Propósito: Funnel secuencial por usuario en la ventana temprana:
+--           Search -> View item -> Add to cart -> Begin checkout -> Purchase.
+-- Alcance: usuarios con first_date >= 2020-11-25 (ver docs/data_notes.md).
+-- Ventana (v1): aproximación por día calendario con event_date (D0–D3 desde first_date).
+-- Método:
+--   - Para cada usuario, obtener el PRIMER event_timestamp de cada paso dentro de la ventana.
+--   - Contar usuarios que cumplen orden estricto (ts_search < ts_view_item < ...).
+-- Grano: usuario (usuarios únicos).
+-- Output: step_order, step_name, users.
+-- Nota: cuenta “usuarios que alcanzan el paso en orden” (no sesiones, no recuento de eventos).
+
+-- EN
+-- Purpose: User-level sequential funnel within the early window:
+--          Search -> View item -> Add to cart -> Begin checkout -> Purchase.
+-- Scope: users with first_date >= 2020-11-25 (see docs/data_notes.md).
+-- Window (v1): calendar-day approximation using event_date (D0–D3 from first_date).
+-- Method:
+--   - For each user, compute the FIRST event_timestamp for each step within the window.
+--   - Count users that satisfy strict ordering constraints (ts_search < ts_view_item < ...).
+-- Grain: user-level (unique users).
+-- Output: step_order, step_name, users.
 
 WITH first_seen AS (
   SELECT

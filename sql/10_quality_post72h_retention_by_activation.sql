@@ -1,5 +1,22 @@
--- Purpose: Quality check: Post-72h retention (D4–D30) by 72h activation (add_to_cart)
--- Scope: users with first_date >= 2020-11-25
+-- ES
+-- Propósito: Quality check: comparar retención post-72h (D4–D30) entre activados y no activados en 72h.
+-- Alcance: usuarios con first_date >= 2020-11-25 (ver docs/data_notes.md).
+-- Ventanas (v1):
+--   - Activación: D0–D3 (aprox día calendario con event_date).
+--   - Retención (sin solape): actividad en D4–D30 desde first_date.
+-- Grano: usuario (flag retained_post72h_d30), agregado por activated_72h.
+-- Output: activated_72h, users, retention_post72h_rate.
+-- Nota: asociación (no causal). Útil para validar “calidad” del usuario activado.
+
+-- EN
+-- Purpose: Quality check: compare post-72h retention (D4–D30) between activated vs non-activated users.
+-- Scope: users with first_date >= 2020-11-25 (see docs/data_notes.md).
+-- Windows (v1):
+--   - Activation: D0–D3 (calendar-day approximation using event_date).
+--   - Retention (non-overlapping): activity in D4–D30 from first_date.
+-- Grain: user-level retained_post72h_d30 flag, aggregated by activated_72h.
+-- Output: activated_72h, users, retention_post72h_rate.
+-- Note: association check (non-causal). Used to validate activated users are higher-quality.
 
 WITH first_seen AS (
   SELECT

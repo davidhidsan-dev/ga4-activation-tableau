@@ -1,3 +1,29 @@
+-- ES
+-- Propósito: Construir la vista de entrenamiento ML para predecir activación 72h (add_to_cart_72h) con señales tempranas.
+-- Objeto: CREATE OR REPLACE VIEW ga4-retention-segmentation.analytics.ml_activation_training_v1
+-- Alcance: usuarios con first_date >= 2020-11-25 (ver docs/data_notes.md).
+-- Ventana (v1): aproximación por día calendario con event_date (D0–D3 desde first_date).
+-- Features:
+--   - Flags: search_72h, view_item_72h, scroll_72h, begin_checkout_72h, purchase_72h
+--   - Conteos: sessions_72h (distinct ga_session_id), view_item_events_72h
+-- Label: add_to_cart_72h (1 si hay add_to_cart en la ventana)
+-- Grano: 1 fila por usuario (user_pseudo_id) con first_date.
+-- Output: columnas de features + label para BQML.
+-- Nota: baseline sin leakage fuera de la ventana temprana.
+
+-- EN
+-- Purpose: Build ML training view to predict 72h activation (add_to_cart_72h) from early behavior signals.
+-- Object: CREATE OR REPLACE VIEW ga4-retention-segmentation.analytics.ml_activation_training_v1
+-- Scope: users with first_date >= 2020-11-25 (see docs/data_notes.md).
+-- Window (v1): calendar-day approximation using event_date (D0–D3 from first_date).
+-- Features:
+--   - Flags: search_72h, view_item_72h, scroll_72h, begin_checkout_72h, purchase_72h
+--   - Counts: sessions_72h (distinct ga_session_id), view_item_events_72h
+-- Label: add_to_cart_72h (1 if add_to_cart occurs within the window)
+-- Grain: one row per user (user_pseudo_id) with first_date.
+-- Output: feature columns + label for BigQuery ML.
+-- Note: baseline dataset with no leakage beyond the early window.
+
 CREATE OR REPLACE VIEW `ga4-retention-segmentation.analytics.ml_activation_training_v1` AS
 WITH first_seen AS (
   SELECT

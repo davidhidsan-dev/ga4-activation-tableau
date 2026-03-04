@@ -1,5 +1,18 @@
--- Purpose: Search -> Product View rate within sessions (proxy for search quality)
--- Scope: sessions from users with first_date >= 2020-11-25
+-- ES
+-- Propósito: Calcular Search -> Product View rate a nivel sesión (proxy de calidad de búsqueda).
+-- Alcance: sesiones de usuarios con first_date >= 2020-11-25 (ver docs/data_notes.md).
+-- Definición: entre sesiones con view_search_results, % que también tienen al menos un view_item.
+-- Grano: sesión (user_pseudo_id + ga_session_id), usando flags por sesión.
+-- Output: sessions_with_search, sessions_search_and_view_item, search_to_view_item_rate.
+-- Nota: métrica por sesión a propósito (mide eficiencia dentro de una visita).
+
+-- EN
+-- Purpose: Compute session-level Search -> Product View rate (proxy for search quality).
+-- Scope: sessions from users with first_date >= 2020-11-25 (see docs/data_notes.md).
+-- Definition: among sessions with view_search_results, % that also include at least one view_item.
+-- Grain: session (user_pseudo_id + ga_session_id), using boolean flags per session.
+-- Output: sessions_with_search, sessions_search_and_view_item, search_to_view_item_rate.
+-- Note: session-level on purpose (measures efficiency within a visit).
 
 WITH first_seen AS (
   SELECT

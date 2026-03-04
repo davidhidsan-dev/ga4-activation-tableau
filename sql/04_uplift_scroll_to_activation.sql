@@ -1,5 +1,20 @@
--- Purpose: Estimate potential uplift in add_to_cart if we convert some users
--- from product_viewer_no_scroll_72h to product_viewer_scroll_72h
+-- ES
+-- Propósito: Estimación “what-if” (no causal) del uplift en add_to_cart si parte de usuarios cambia de
+--           product_viewer_no_scroll_72h -> product_viewer_scroll_72h.
+-- Alcance: usuarios con first_date >= 2020-11-25 (ver docs/data_notes.md).
+-- Ventana (v1): aproximación por día calendario con event_date (D0–D3 desde first_date).
+-- Método: uplift = moved_users * (scroll_rate - no_scroll_rate), con moved_users = no_scroll_users * scenario_shift_pct.
+-- Output: scenario_shift_pct, no_scroll_users, no_scroll_rate, scroll_rate, rate_diff, expected_extra_add_to_cart.
+-- Nota: priorización descriptiva; requiere experimento (A/B) para causalidad.
+
+-- EN
+-- Purpose: Non-causal “what-if” uplift estimate in add_to_cart if a share of users shifts
+--          from product_viewer_no_scroll_72h -> product_viewer_scroll_72h.
+-- Scope: users with first_date >= 2020-11-25 (see docs/data_notes.md).
+-- Window (v1): calendar-day approximation using event_date (D0–D3 from first_date).
+-- Method: uplift = moved_users * (scroll_rate - no_scroll_rate), where moved_users = no_scroll_users * scenario_shift_pct.
+-- Output: scenario_shift_pct, no_scroll_users, no_scroll_rate, scroll_rate, rate_diff, expected_extra_add_to_cart.
+-- Note: descriptive prioritization; requires A/B test to confirm causality.
 
 WITH first_seen AS (
   SELECT

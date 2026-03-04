@@ -1,5 +1,20 @@
--- Purpose: Search -> Product View rate within sessions, broken down by early behavior segment
--- Scope: users with first_date >= 2020-11-25
+-- ES
+-- Propósito: Search -> Product View rate por segmento temprano (segmento definido en 72h).
+-- Alcance: usuarios con first_date >= 2020-11-25 (ver docs/data_notes.md).
+-- Segmentación (v1): ventana temprana por día calendario con event_date (D0–D3 desde first_date).
+-- Métrica de búsqueda: grano sesión (user_pseudo_id + ga_session_id) con flags por sesión.
+-- Etiquetado: cada sesión hereda el segmento del usuario (derivado de su comportamiento temprano).
+-- Output: segment_72h, sessions_with_search, sessions_search_and_view_item, search_to_view_item_rate.
+-- Nota: el rate de búsqueda NO se limita a 72h; se mide en todas las sesiones del usuario “scoped”.
+
+-- EN
+-- Purpose: Session-level Search -> Product View rate broken down by early (72h) user segment.
+-- Scope: users with first_date >= 2020-11-25 (see docs/data_notes.md).
+-- Segmentation (v1): early window uses calendar-day event_date (D0–D3 from first_date).
+-- Search metric: session grain (user_pseudo_id + ga_session_id) using boolean flags.
+-- Labeling: each session inherits the user's early segment (derived from early behavior).
+-- Output: segment_72h, sessions_with_search, sessions_search_and_view_item, search_to_view_item_rate.
+-- Note: the search rate is NOT restricted to 72h; it is measured across all sessions for scoped users.
 
 WITH first_seen AS (
   SELECT

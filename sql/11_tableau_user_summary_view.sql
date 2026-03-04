@@ -1,3 +1,31 @@
+-- ES
+-- Propósito: Vista BI-ready a nivel usuario para Tableau (1 fila por usuario) con comportamiento temprano + segmento + calidad.
+-- Objeto: CREATE OR REPLACE VIEW ga4-retention-segmentation.analytics.tableau_user_summary_v1
+-- Alcance: usuarios con first_date >= 2020-11-25 (ver docs/data_notes.md).
+-- Ventanas (v1):
+--   - Ventana temprana (“72h”): D0–D3 por aproximación de día calendario con event_date.
+--   - Calidad (sin solape): retención post-72h en D4–D30 desde first_date.
+-- Incluye:
+--   - user_pseudo_id, first_date, segment_72h
+--   - flags 72h y conteos ligeros
+--   - retained_post72h_d30
+-- Grano: 1 fila por user_pseudo_id.
+-- Output: pensada para export a CSV (Tableau Public puede requerir splits).
+
+-- EN
+-- Purpose: BI-ready user-level view for Tableau (one row per user) combining early behavior, segment, and quality metric.
+-- Object: CREATE OR REPLACE VIEW ga4-retention-segmentation.analytics.tableau_user_summary_v1
+-- Scope: users with first_date >= 2020-11-25 (see docs/data_notes.md).
+-- Windows (v1):
+--   - Early window (“72h”): D0–D3 calendar-day approximation using event_date.
+--   - Quality (non-overlapping): post-72h retention flag in D4–D30 from first_date.
+-- Includes:
+--   - user_pseudo_id, first_date, segment_72h
+--   - 72h flags and light counts
+--   - retained_post72h_d30
+-- Grain: one row per user_pseudo_id.
+-- Output: designed for CSV export (Tableau Public may require splitting).
+
 CREATE OR REPLACE VIEW `ga4-retention-segmentation.analytics.tableau_user_summary_v1` AS
 WITH first_seen AS (
   SELECT

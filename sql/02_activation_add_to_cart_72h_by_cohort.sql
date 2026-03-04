@@ -1,3 +1,17 @@
+-- ES
+-- Propósito: Activación 72h (add_to_cart) por cohorte de adquisición (first_date).
+-- Alcance: first_date >= 2020-11-25 (ver docs/data_notes.md).
+-- Ventana (v1): aproximación por día calendario con event_date (D0–D3 desde first_date).
+-- Grano: activación a nivel usuario agregada a día de cohorte.
+-- Output: first_date, users_total, users_activated_72h, activation_rate_72h.
+
+-- EN
+-- Purpose: 72h activation (add_to_cart) by acquisition cohort (first_date).
+-- Scope: first_date >= 2020-11-25 (see docs/data_notes.md).
+-- Window (v1): calendar-day approximation using event_date (D0–D3 from first_date).
+-- Grain: user-level activation aggregated to cohort-day.
+-- Output: first_date, users_total, users_activated_72h, activation_rate_72h.
+
 WITH first_seen AS (
   SELECT 
     user_pseudo_id,

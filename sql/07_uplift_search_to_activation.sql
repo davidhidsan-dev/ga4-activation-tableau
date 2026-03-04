@@ -1,11 +1,28 @@
--- Purpose: Estimate potential uplift in add_to_cart by improving search -> product view for searcher_only users
+-- ES
+-- Propósito: Estimación “what-if” (no causal) del uplift en add_to_cart si mejoras Search -> Product View
+--           para el segmento searcher_only_72h.
+-- Alcance: usuarios con first_date >= 2020-11-25 (ver docs/data_notes.md).
+-- Ventana (v1): aproximación por día calendario con event_date (D0–D3 desde first_date).
+-- Supuesto: una fracción de searcher_only pasa a comportarse como “viewer” tras mejorar búsqueda.
+-- Benchmark: tasa viewer ponderada entre product_viewer_scroll y product_viewer_no_scroll.
+-- Método: uplift = moved_users * (viewer_rate - searcher_rate), moved_users = searcher_users * scenario_move_to_viewer_pct.
+-- Output: scenario_move_to_viewer_pct, searcher_users, searcher_activation_rate, viewer_activation_rate_weighted,
+--         rate_diff, expected_extra_add_to_cart.
+-- Nota: priorización descriptiva; validar con experimento (A/B).
 
--- Note: What-if estimate (not causal).
--- Assumption: A fraction of searcher_only users will behave like product viewers after search improvements.
--- Viewer benchmark uses WEIGHTED activation rate across viewer segments.
+-- EN
+-- Purpose: Non-causal “what-if” uplift estimate in add_to_cart by improving Search -> Product View
+--          for the searcher_only_72h segment.
+-- Scope: users with first_date >= 2020-11-25 (see docs/data_notes.md).
+-- Window (v1): calendar-day approximation using event_date (D0–D3 from first_date).
+-- Assumption: a fraction of searcher_only users transitions to “viewer-like” behavior after search improvements.
+-- Benchmark: weighted viewer activation rate across viewer segments (scroll + no_scroll).
+-- Method: uplift = moved_users * (viewer_rate - searcher_rate), moved_users = searcher_users * scenario_move_to_viewer_pct.
+-- Output: scenario_move_to_viewer_pct, searcher_users, searcher_activation_rate, viewer_activation_rate_weighted,
+--         rate_diff, expected_extra_add_to_cart.
+-- Note: descriptive prioritization; validate via experiment (A/B test).
 
 WITH base AS (
-  -- Reuse the segments + activation flags at user level (72h)
   WITH first_seen AS (
     SELECT
       user_pseudo_id,
