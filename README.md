@@ -47,7 +47,20 @@
 3) Construir el dashboard en Tableau usando las tablas exportadas.
 
 ## ES — Dashboard
-- Dashboard (Tableau Public): https://public.tableau.com/app/profile/david.hidalgo.s.nchez/viz/Libro1_17724829569200/Dashboard1?publish=yes
+- Dashboard (Tableau Public): https://public.tableau.com/views/GA4ActivationDiagnostics72hSegmentationFunnel/Dashboard1?:language=es-ES&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link
+
+## ES — Limitaciones y próximos pasos
+**Limitaciones**
+- **Ventana 72h aproximada (D0–D3):** usamos `event_date` (día calendario) para definir la ventana temprana, no un corte exacto por horas.
+- **Datos GA4 “sample” y obfuscados:** el dataset público puede no representar comportamiento real de un ecommerce específico.
+- **Métricas “what-if” no causales:** los escenarios de uplift estiman impacto potencial asumiendo que cambiar el comportamiento cambia la activación; requieren validación con experimentos A/B.
+- **Modelo de propensión (baseline):** útil para ranking/priorización, pero no sustituye experimentación ni garantiza causalidad.
+
+**Próximos pasos (si fuera un proyecto real)**
+- Implementar experimentos A/B enfocados en **Search → View item** y **PDP engagement** (scroll/related items).
+- Refinar la ventana temporal usando `event_timestamp` para medir 72h “reales” y comparar resultados con la aproximación D0–D3.
+- Añadir features más ricas (device, source/medium, categorías de producto) y comparar modelos (p.ej. boosted trees) con validación temporal.
+
 
 ---
 
@@ -99,4 +112,16 @@
 3) Build the dashboard in Tableau using the exported tables.
 
 ## EN — Dashboard
-- Dashboard (Tableau Public): https://public.tableau.com/app/profile/david.hidalgo.s.nchez/viz/Libro1_17724829569200/Dashboard1?publish=yes
+- Dashboard (Tableau Public): https://public.tableau.com/views/GA4ActivationDiagnostics72hSegmentationFunnel/Dashboard1?:language=es-ES&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link
+
+## EN — Limitations & next steps
+**Limitations**
+- **Approx. 72h window (D0–D3):** the early window is defined using calendar-day `event_date`, not an exact hour-based cutoff.
+- **GA4 public sample / obfuscated data:** the dataset may not reflect a specific real-world ecommerce behavior.
+- **Non-causal what-if estimates:** uplift scenarios assume behavior shifts translate into higher activation; must be validated via A/B testing.
+- **Propensity model (baseline):** helpful for ranking/prioritization, but not a causal model and not a replacement for experiments.
+
+**Next steps (if this were a real project)**
+- Run A/B tests targeting **Search → View item** and **PDP engagement** (scroll/related items).
+- Rebuild the early window using `event_timestamp` to measure “true 72h” and compare against D0–D3 approximation.
+- Add richer features (device, source/medium, product categories) and benchmark more models (e.g., boosted trees) with time-based validation.
