@@ -170,7 +170,8 @@ Most analyses apply `first_date >= 2020-11-25` (see `docs/data_notes.md`) to avo
 
 ### ES
 
-* **Qué hace:** calcula el rate global de Search → Product View **por sesión** (72h).
+* **Qué hace:** calcula el rate global de Search → Product View **por sesión** para usuarios en scope.
+* **Importante:** métrica **session-level** (calidad del buscador) y **no** se limita a D0–D3; incluye sesiones de usuarios con `first_date >= 2020-11-25`.
 * **Definición:** entre sesiones con `view_search_results`, % que también tienen `view_item`.
 * **Output:**
 
@@ -180,7 +181,8 @@ Most analyses apply `first_date >= 2020-11-25` (see `docs/data_notes.md`) to avo
 
 ### EN
 
-* **What it does:** computes global Search → Product View rate **per session** (72h).
+* **What it does:** computes the global Search → Product View rate **per session** for scoped users.
+* **Important:** **session-level** metric (search quality proxy) and **not** limited to D0–D3; includes sessions from users with `first_date >= 2020-11-25`.
 * **Definition:** among sessions with `view_search_results`, % that also have `view_item`.
 * **Output:**
 
@@ -194,7 +196,8 @@ Most analyses apply `first_date >= 2020-11-25` (see `docs/data_notes.md`) to avo
 
 ### ES
 
-* **Qué hace:** calcula Search → Product View rate por segmento.
+* **Qué hace:** calcula Search → Product View rate **por sesión** desglosado por segmento temprano (72h).
+* **Importante:** el segmento se define con eventos D0–D3, pero el rate Search → View es **session-level** y **no** se limita a D0–D3 (se calcula sobre sesiones de usuarios en scope).
 * **Uso:** detectar segmentos “atascados” en la búsqueda (ej. `searcher_only_72h`).
 * **Output:** por `segment_72h`:
 
@@ -204,7 +207,8 @@ Most analyses apply `first_date >= 2020-11-25` (see `docs/data_notes.md`) to avo
 
 ### EN
 
-* **What it does:** computes Search → Product View rate by segment.
+* **What it does:** computes session-level Search → Product View rate broken down by early (72h) segments.
+* **Important:** segments are defined from D0–D3 behavior, but the Search → View rate is **session-level** and **not** limited to D0–D3 (computed across sessions from scoped users).
 * **Use case:** detect segments stuck at search (e.g., `searcher_only_72h`).
 * **Output:** per `segment_72h`:
 

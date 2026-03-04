@@ -15,6 +15,8 @@
   * Activación (`add_to_cart_72h`) se evalúa **por usuario**.
   * Search → Product View se evalúa **por sesión** (mide calidad del buscador).
 
+* **Importante:** el proxy Search → Product View es **session-level** y se calcula sobre **todas las sesiones** de usuarios en scope (`first_date >= 2020-11-25`), **no** solo dentro de D0–D3. Esto evita perder señal por limitarlo a la ventana temprana, pero hay que interpretarlo como métrica de **calidad de búsqueda**, no como comportamiento estrictamente “72h”.
+
 ## ES — Alcance temporal (filtro 2020-11-25)
 
 Al detectar días con casi cero `add_to_cart`, restringimos a `first_date >= 2020-11-25` para evitar cohortes con “cero oportunidad”.
@@ -41,6 +43,8 @@ Al detectar días con casi cero `add_to_cart`, restringimos a `first_date >= 202
 
   * Activation (`add_to_cart_72h`) is **user-level**.
   * Search → Product View is **session-level**.
+
+* **Important:** the Search → Product View proxy is **session-level** and is computed across **all sessions** from scoped users (`first_date >= 2020-11-25`), **not** only within D0–D3. This preserves signal, but it should be interpreted as a **search quality** metric, not strictly “72h behavior”.
 
 ## EN — Scope filter (2020-11-25)
 
