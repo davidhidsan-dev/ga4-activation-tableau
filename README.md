@@ -34,6 +34,8 @@
 - **Searchers:** usuarios con al menos un `view_search_results` dentro de 72h.
 - **Segmentos (72h):** reglas basadas en comportamiento temprano (ver SQL).
 
+**Nota:** la ventana “72h” se aproxima por día calendario (event_date): D0–D3 desde first_date.
+
 ## ES — Estructura del repositorio
 - `/sql` → todas las queries de BigQuery usadas en el proyecto
 - `/reports` → interpretaciones escritas (ej. reporte del funnel)
@@ -82,6 +84,8 @@
 - **Activation (72h):** user has at least one `add_to_cart` event within 72h.
 - **Searchers:** users with at least one `view_search_results` within 72h.
 - **Segments (72h):** rule-based categories from early behavior (see SQL).
+
+**Note:** the “72h” window is approximated by calendar day (event_date): D0–D3 from first_date.
 
 ## EN — Repository structure
 - `/sql` → all BigQuery queries used in the project
