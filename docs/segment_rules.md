@@ -1,31 +1,39 @@
-# Segment Rules (72h) / Reglas de Segmentación (72h)
+# Segment Rules (early window) / Reglas de Segmentación (ventana temprana)
 
 ## ES — Definición
 
-Segmentación basada SOLO en comportamiento temprano dentro de las primeras 72h desde `first_date`.
-Regla: **un usuario pertenece a 1 solo segmento** (prioridad de arriba a abajo).
+Segmentación basada **solo** en comportamiento dentro de la **ventana temprana**:
+**D0–D3 desde `first_date`** (aproximación por día calendario usando `event_date`).
+
+Regla: **cada usuario pertenece a 1 único segmento** (prioridad de arriba a abajo).
 
 ## ES — Prioridad (tie-breaker)
 
-1. `buyer_72h`: hizo `purchase` en 72h
-2. `checkout_intent_72h`: hizo `begin_checkout` en 72h
-3. `product_viewer_scroll_72h`: vio producto (`view_item`) y tuvo `scroll` en 72h
-4. `product_viewer_no_scroll_72h`: vio producto (`view_item`) pero NO tuvo `scroll` en 72h
-5. `searcher_only_72h`: buscó (`view_search_results`) pero NO llegó a ver producto (`view_item=0`)
-6. `low_engagement_72h`: resto
+1. `buyer`: hizo `purchase` en la ventana temprana
+2. `checkout_intent`: hizo `begin_checkout` en la ventana temprana
+3. `product_viewer_scroll`: vio producto (`view_item`) **y** tuvo `scroll` en la ventana temprana
+4. `product_viewer_no_scroll`: vio producto (`view_item`) pero **no** tuvo `scroll` en la ventana temprana
+5. `searcher_only`: buscó (`view_search_results`) pero **no** llegó a ver producto (`view_item = 0`)
+6. `low_engagement`: resto
 
-> Nota: Los segmentos se definen sin usar `add_to_cart` para evitar “auto-explicarse” la métrica objetivo.
+> Nota: los segmentos se definen **sin usar `add_to_cart`** para evitar “auto-explicar” la métrica objetivo.
+
+---
 
 ## EN — Definition
 
-Segmentation uses ONLY early behavior within the first 72h from `first_date`.
-Rule: **each user belongs to exactly one segment** (priority top-down).
+Segmentation is based **only** on behavior within the **early window**:
+**D0–D3 from `first_date`** (calendar-day approximation using `event_date`).
+
+Rule: **each user belongs to exactly one segment** (top-down priority).
 
 ## EN — Priority (tie-breaker)
 
-1. `buyer_72h`: `purchase` within 72h
-2. `checkout_intent_72h`: `begin_checkout` within 72h
-3. `product_viewer_scroll_72h`: `view_item` + `scroll` within 72h
-4. `product_viewer_no_scroll_72h`: `view_item` + no `scroll` within 72h
-5. `searcher_only_72h`: `view_search_results` but no `view_item`
-6. `low_engagement_72h`: everyone else
+1. `buyer`: `purchase` in the early window
+2. `checkout_intent`: `begin_checkout` in the early window
+3. `product_viewer_scroll`: `view_item` **and** `scroll` in the early window
+4. `product_viewer_no_scroll`: `view_item` but **no** `scroll` in the early window
+5. `searcher_only`: `view_search_results` but no `view_item`
+6. `low_engagement`: everyone else
+
+> Note: segments are defined **without `add_to_cart`** to avoid “self-explaining” the target metric.

@@ -2,52 +2,52 @@
 
 ## ES — Limitaciones
 
-* **Ventana 72h aproximada por fecha:** se usa `event_date` (día calendario), no timestamp exacto.
-* **Dataset sample/obfuscado:** no representa 1:1 un ecommerce real, pero sirve para metodología.
-* **What-if no causal:** los escenarios de uplift son descriptivos; validar con A/B tests.
+* **Ventana temprana aproximada por fecha:** se usa `event_date` (día calendario), no timestamp exacto.  
+  La ventana temprana se define como **D0–D3** desde `first_date`.
+* **Dataset sample/obfuscado:** no representa 1:1 un ecommerce real, pero sirve para practicar metodología y diseño de análisis.
+* **What-if no causal:** los escenarios de uplift son descriptivos; validar con experimentos (A/B tests).
 * **Tableau Public:** limita conexión directa a BigQuery y tamaño de exports (se usan CSVs en partes).
 
 ## ES — Siguientes pasos (si fuera una empresa)
 
-1. **Embudo estrictamente secuencial por sesión + timestamp**
+1. **Embudo secuencial por sesión con timestamps**
+   - Validar ordering real (search → view_item → add_to_cart) usando `event_timestamp` y `ga_session_id` (funnel session-level).
 
-* Validar ordering real (search → view_item → add_to_cart) con timestamps y `ga_session_id`.
+2. **Análisis por canal y dispositivo**
+   - Añadir dimensiones (source/medium, device) para ver diferencias en Search → View item y en activación.
 
-2. **Análisis por canal/dispositivo**
+3. **Instrumentación / eventos intermedios**
+   - Incorporar pasos como `add_shipping_info` y `add_payment_info` para entender fricción en checkout y drop-offs más finos.
 
-* Añadir dimensiones (source/medium, device) y ver diferencias en Search → View.
+4. **Experimentación**
+   - Definir hipótesis y diseñar tests (mejoras de búsqueda, módulos de recomendación, layout/CTA en PDP, performance).
 
-3. **Experimentación**
-
-* Definir hipótesis y diseñar tests (p.ej. mejoras de búsqueda, módulos de recomendación, layout PDP).
-
-4. **Modelo de propensión más rico**
-
-* Incluir más features (p.ej., recuentos de eventos, diversidad de categorías, señales de engagement) y calibración.
+5. **Modelo de propensión más rico**
+   - Incluir más features (recuentos de eventos, diversidad de categorías, engagement) y mejorar calibración/validación.
 
 ---
 
 ## EN — Limitations
 
-* **72h window is date-based:** uses `event_date` (calendar days), not exact timestamps.
-* **Obfuscated/sample dataset:** not a 1:1 representation of a real business, but suitable for methodology.
-* **Non-causal what-if:** uplift scenarios are descriptive; validate via A/B tests.
+* **Early window is date-based:** uses `event_date` (calendar days), not exact timestamps.  
+  The early window is defined as **D0–D3** from `first_date`.
+* **Obfuscated/sample dataset:** not a 1:1 representation of a real business, but suitable for learning methodology and analysis design.
+* **Non-causal what-if:** uplift scenarios are descriptive; validate via experiments (A/B tests).
 * **Tableau Public constraints:** no direct BigQuery connection and export row limits (CSV splits used).
 
 ## EN — Next steps (enterprise-ready)
 
-1. **Strict sequential session-level funnel using timestamps**
-
-* Validate true ordering (search → view_item → add_to_cart) with timestamps and `ga_session_id`.
+1. **Sequential session-level funnel using timestamps**
+   - Validate true ordering (search → view_item → add_to_cart) with `event_timestamp` and `ga_session_id` (session-level funnel).
 
 2. **Channel/device analysis**
+   - Add dimensions (source/medium, device) to check differences in Search → View item and activation.
 
-* Add dimensions (source/medium, device) to check differences in Search → View.
+3. **Instrumentation / intermediate checkout events**
+   - Include steps such as `add_shipping_info` and `add_payment_info` to diagnose checkout friction with finer drop-offs.
 
-3. **Experimentation**
+4. **Experimentation**
+   - Define hypotheses and run tests (search improvements, recommendation modules, PDP layout/CTA, performance).
 
-* Define hypotheses and run tests (search improvements, recommendation modules, PDP layout).
-
-4. **Richer propensity modeling**
-
-* Add more features (event counts, category diversity, engagement signals) and improve calibration.
+5. **Richer propensity modeling**
+   - Add more features (event counts, category diversity, engagement signals) and improve calibration/validation.

@@ -1,13 +1,13 @@
-# Funnel — Search (72h)
+# Funnel — Search → Purchase (Early Window)
 
 ## ES — Qué mide este funnel
-Este funnel está construido con **usuarios únicos** (`user_pseudo_id`) y usando eventos dentro de la ventana temprana **D0–D3** desde el `first_date` de cada usuario (aprox. “72h” por día calendario).
+Este funnel está construido con **usuarios únicos** (`user_pseudo_id`) usando eventos dentro de la **ventana temprana D0–D3** desde el `first_date` de cada usuario (aproximación por día calendario).
 
-Además, es un funnel **secuencial**: para cada usuario se toma el **primer `event_timestamp`** de cada paso y se exige orden estricto (Search < View item < Add to cart < Begin checkout < Purchase).
+Además, es un funnel **secuencial**: para cada usuario se toma el **primer `event_timestamp`** de cada paso y se exige orden estricto (**Search < View item < Add to cart < Begin checkout < Purchase**).
 
 ### Alcance
 - **Cohorte:** usuarios cuyo `first_date` es **≥ 25/11/2020**.
-- **Ventana (72h aprox.):** eventos entre `first_date` y `first_date + 3 días` (**D0–D3**, por día calendario).
+- **Ventana temprana (D0–D3):** eventos entre `first_date` y `first_date + 3 días` (por día calendario).
 - **Población:** usuarios que realizaron al menos un evento de búsqueda `view_search_results` dentro de esa ventana.
 - **Unidad:** **usuarios únicos** (no sesiones).
 
@@ -26,13 +26,13 @@ Este funnel mide **progresión secuencial por usuario** dentro de la ventana tem
 ---
 
 ## EN — What this funnel measures
-This funnel is built on **unique users** (`user_pseudo_id`) using events within the early window **D0–D3** from `first_date` (calendar-day “72h” approximation).
+This funnel is built on **unique users** (`user_pseudo_id`) using events within the **early window D0–D3** from `first_date` (calendar-day approximation).
 
-It is also a **sequential** funnel: for each user we take the **first `event_timestamp`** of each step and enforce strict ordering (Search < View item < Add to cart < Begin checkout < Purchase).
+It is also a **sequential** funnel: for each user we take the **first `event_timestamp`** of each step and enforce strict ordering (**Search < View item < Add to cart < Begin checkout < Purchase**).
 
 ### Scope
 - **Cohort:** users whose `first_date` is **≥ 2020-11-25**.
-- **Window (approx. 72h):** events between `first_date` and `first_date + 3 days` (**D0–D3**, calendar-day).
+- **Early window (D0–D3):** events between `first_date` and `first_date + 3 days` (calendar-day).
 - **Population:** users who performed at least one search event `view_search_results` within that window.
 - **Unit:** **unique users** (not sessions).
 
@@ -63,13 +63,11 @@ This funnel measures **user-level sequential progression** within the early wind
 ---
 
 ## ES — Interpretación
-
-* Mayor caída: **Search → View item** (cuello de botella de descubrimiento).
-* Enfoque de acción: mejorar **relevancia de búsqueda**, **sugerencias**, y **resultados** para aumentar “View item” tras una búsqueda.
-* Métrica de seguimiento: **Search → View item rate (a nivel sesión)** y **Add-to-cart rate (72h aprox.)**.
+- Mayor caída: **Search → View item** (cuello de botella de descubrimiento).
+- Enfoque de acción: mejorar **relevancia de búsqueda**, **sugerencias**, y **UX de resultados** para aumentar “View item” tras una búsqueda.
+- Métricas de seguimiento: **Search → View item rate (a nivel sesión)** y **Add-to-cart rate (ventana temprana D0–D3)**.
 
 ## EN — Interpretation
-
-* Largest drop: **Search → View item** (discovery bottleneck).
-* Action focus: improve **search relevance**, **suggestions**, and **results UX** to increase “View item” after a search.
-* Tracking metrics: **Search → View item rate (session-level)** and **Add-to-cart rate (approx. 72h)**.
+- Largest drop: **Search → View item** (discovery bottleneck).
+- Action focus: improve **search relevance**, **suggestions**, and **results UX** to increase “View item” after a search.
+- Tracking metrics: **Search → View item rate (session-level)** and **Add-to-cart rate (early window D0–D3)**.
