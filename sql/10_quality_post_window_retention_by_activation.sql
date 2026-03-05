@@ -1,21 +1,21 @@
 -- ES
--- Propósito: Quality check: comparar retención post-72h (D4–D30) entre activados y no activados en 72h.
+-- Propósito: Quality check: comparar retención post-ventana (D4–D30) entre activados y no activados en la ventana temprana.
 -- Alcance: usuarios con first_date >= 2020-11-25 (ver docs/data_notes.md).
 -- Ventanas (v1):
---   - Activación: D0–D3 (aprox día calendario con event_date).
+--   - Activación (ventana temprana): D0–D3 (aprox día calendario con event_date).
 --   - Retención (sin solape): actividad en D4–D30 desde first_date.
--- Grano: usuario (flag retained_post72h_d30), agregado por activated_72h.
--- Output: activated_72h, users, retention_post72h_rate.
+-- Grano: usuario (flag retained_post_window_d30), agregado por activated_early.
+-- Output: activated_early, users, retention_post_window_rate.
 -- Nota: asociación (no causal). Útil para validar “calidad” del usuario activado.
 
 -- EN
--- Purpose: Quality check: compare post-72h retention (D4–D30) between activated vs non-activated users.
+-- Purpose: Quality check: compare post-window retention (D4–D30) between activated vs non-activated users in the early window.
 -- Scope: users with first_date >= 2020-11-25 (see docs/data_notes.md).
 -- Windows (v1):
---   - Activation: D0–D3 (calendar-day approximation using event_date).
+--   - Activation (early window): D0–D3 (calendar-day approximation using event_date).
 --   - Retention (non-overlapping): activity in D4–D30 from first_date.
--- Grain: user-level retained_post72h_d30 flag, aggregated by activated_72h.
--- Output: activated_72h, users, retention_post72h_rate.
+-- Grain: user-level retained_post_window_d30 flag, aggregated by activated_early.
+-- Output: activated_early, users, retention_post_window_rate.
 -- Note: association check (non-causal). Used to validate activated users are higher-quality.
 
 WITH first_seen AS (
@@ -26,7 +26,7 @@ WITH first_seen AS (
   GROUP BY user_pseudo_id
   HAVING first_date >= DATE '2020-11-25'
 ),
-events_72h AS (
+events_early AS (
   SELECT
     e.user_pseudo_id,
     f.first_date,
@@ -41,8 +41,8 @@ activation AS (
   SELECT
     user_pseudo_id,
     first_date,
-    MAX(CASE WHEN event_name = 'add_to_cart' THEN 1 ELSE 0 END) AS activated_72h
-  FROM events_72h
+    MAX(CASE WHEN event_name = 'add_to_cart' THEN 1 ELSE 0 END) AS activated_early
+  FROM events_early
   GROUP BY user_pseudo_id, first_date
 ),
 activity_by_day AS (
@@ -51,23 +51,23 @@ activity_by_day AS (
     PARSE_DATE('%Y%m%d', event_date) AS activity_date
   FROM `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`
 ),
-post72h_retention AS (
+post_window_retention AS (
   SELECT
     a.user_pseudo_id,
-    a.activated_72h,
+    a.activated_early,
     MAX(CASE
       WHEN abd.activity_date BETWEEN DATE_ADD(a.first_date, INTERVAL 4 DAY)
                                 AND DATE_ADD(a.first_date, INTERVAL 30 DAY)
-      THEN 1 ELSE 0 END) AS retained_post72h_d30
+      THEN 1 ELSE 0 END) AS retained_post_window_d30
   FROM activation a
   LEFT JOIN activity_by_day abd
     ON abd.user_pseudo_id = a.user_pseudo_id
-  GROUP BY a.user_pseudo_id, a.activated_72h
+  GROUP BY a.user_pseudo_id, a.activated_early
 )
 SELECT
-  activated_72h,
+  activated_early,
   COUNT(*) AS users,
-  AVG(retained_post72h_d30) AS retention_post72h_rate
-FROM post72h_retention
-GROUP BY activated_72h
-ORDER BY activated_72h DESC;
+  AVG(retained_post_window_d30) AS retention_post_window_rate
+FROM post_window_retention
+GROUP BY activated_early
+ORDER BY activated_early DESC;

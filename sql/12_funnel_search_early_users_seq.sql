@@ -1,6 +1,6 @@
 -- ES
 -- Propósito: Funnel secuencial por usuario en la ventana temprana:
---           Search -> View item -> Add to cart -> Begin checkout -> Purchase.
+--            Search -> View item -> Add to cart -> Begin checkout -> Purchase.
 -- Alcance: usuarios con first_date >= 2020-11-25 (ver docs/data_notes.md).
 -- Ventana (v1): aproximación por día calendario con event_date (D0–D3 desde first_date).
 -- Método:
@@ -8,7 +8,6 @@
 --   - Contar usuarios que cumplen orden estricto (ts_search < ts_view_item < ...).
 -- Grano: usuario (usuarios únicos).
 -- Output: step_order, step_name, users.
--- Nota: cuenta “usuarios que alcanzan el paso en orden” (no sesiones, no recuento de eventos).
 
 -- EN
 -- Purpose: User-level sequential funnel within the early window:
@@ -30,7 +29,7 @@ WITH first_seen AS (
   HAVING first_date >= DATE '2020-11-25'
 ),
 
-events_72h AS (
+events_early AS (
   SELECT
     e.user_pseudo_id,
     e.event_name,
@@ -48,14 +47,14 @@ first_event_ts AS (
   SELECT
     user_pseudo_id,
 
-    -- first time (timestamp) each event happens in the 72h window
+    -- first time (timestamp) each event happens within the early window
     MIN(IF(event_name = 'view_search_results', event_timestamp, NULL)) AS ts_search,
     MIN(IF(event_name = 'view_item',          event_timestamp, NULL)) AS ts_view_item,
     MIN(IF(event_name = 'add_to_cart',        event_timestamp, NULL)) AS ts_add_to_cart,
     MIN(IF(event_name = 'begin_checkout',     event_timestamp, NULL)) AS ts_begin_checkout,
     MIN(IF(event_name = 'purchase',           event_timestamp, NULL)) AS ts_purchase
 
-  FROM events_72h
+  FROM events_early
   GROUP BY user_pseudo_id
 ),
 

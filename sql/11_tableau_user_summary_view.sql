@@ -3,12 +3,12 @@
 -- Objeto: CREATE OR REPLACE VIEW ga4-retention-segmentation.analytics.tableau_user_summary_v1
 -- Alcance: usuarios con first_date >= 2020-11-25 (ver docs/data_notes.md).
 -- Ventanas (v1):
---   - Ventana temprana (“72h”): D0–D3 por aproximación de día calendario con event_date.
---   - Calidad (sin solape): retención post-72h en D4–D30 desde first_date.
+--   - Ventana temprana (early window): D0–D3 por aproximación de día calendario con event_date.
+--   - Calidad (sin solape): retención post-ventana en D4–D30 desde first_date.
 -- Incluye:
---   - user_pseudo_id, first_date, segment_72h
---   - flags 72h y conteos ligeros
---   - retained_post72h_d30
+--   - user_pseudo_id, first_date, segment_early
+--   - flags early + conteos ligeros
+--   - retained_post_window_d30
 -- Grano: 1 fila por user_pseudo_id.
 -- Output: pensada para export a CSV (Tableau Public puede requerir splits).
 
@@ -17,12 +17,12 @@
 -- Object: CREATE OR REPLACE VIEW ga4-retention-segmentation.analytics.tableau_user_summary_v1
 -- Scope: users with first_date >= 2020-11-25 (see docs/data_notes.md).
 -- Windows (v1):
---   - Early window (“72h”): D0–D3 calendar-day approximation using event_date.
---   - Quality (non-overlapping): post-72h retention flag in D4–D30 from first_date.
+--   - Early window: D0–D3 calendar-day approximation using event_date.
+--   - Quality (non-overlapping): post-window retention flag in D4–D30 from first_date.
 -- Includes:
---   - user_pseudo_id, first_date, segment_72h
---   - 72h flags and light counts
---   - retained_post72h_d30
+--   - user_pseudo_id, first_date, segment_early
+--   - early flags and light counts
+--   - retained_post_window_d30
 -- Grain: one row per user_pseudo_id.
 -- Output: designed for CSV export (Tableau Public may require splitting).
 
@@ -35,7 +35,7 @@ WITH first_seen AS (
   GROUP BY user_pseudo_id
   HAVING first_date >= DATE '2020-11-25'
 ),
-events_72h AS (
+events_early AS (
   SELECT
     e.user_pseudo_id,
     f.first_date,
@@ -54,31 +54,31 @@ user_features AS (
     user_pseudo_id,
     first_date,
 
-    -- flags
-    MAX(CASE WHEN event_name = 'view_search_results' THEN 1 ELSE 0 END) AS search_72h,
-    MAX(CASE WHEN event_name = 'view_item' THEN 1 ELSE 0 END) AS view_item_72h,
-    MAX(CASE WHEN event_name = 'scroll' THEN 1 ELSE 0 END) AS scroll_72h,
-    MAX(CASE WHEN event_name = 'add_to_cart' THEN 1 ELSE 0 END) AS add_to_cart_72h,
-    MAX(CASE WHEN event_name = 'begin_checkout' THEN 1 ELSE 0 END) AS begin_checkout_72h,
-    MAX(CASE WHEN event_name = 'purchase' THEN 1 ELSE 0 END) AS purchase_72h,
+    -- flags (early window)
+    MAX(CASE WHEN event_name = 'view_search_results' THEN 1 ELSE 0 END) AS search_early,
+    MAX(CASE WHEN event_name = 'view_item' THEN 1 ELSE 0 END) AS view_item_early,
+    MAX(CASE WHEN event_name = 'scroll' THEN 1 ELSE 0 END) AS scroll_early,
+    MAX(CASE WHEN event_name = 'add_to_cart' THEN 1 ELSE 0 END) AS add_to_cart_early,
+    MAX(CASE WHEN event_name = 'begin_checkout' THEN 1 ELSE 0 END) AS begin_checkout_early,
+    MAX(CASE WHEN event_name = 'purchase' THEN 1 ELSE 0 END) AS purchase_early,
 
-    -- light counts
-    COUNT(DISTINCT ga_session_id) AS sessions_72h,
-    SUM(CASE WHEN event_name = 'view_item' THEN 1 ELSE 0 END) AS view_item_events_72h
-  FROM events_72h
+    -- light counts (early window)
+    COUNT(DISTINCT ga_session_id) AS sessions_early,
+    SUM(CASE WHEN event_name = 'view_item' THEN 1 ELSE 0 END) AS view_item_events_early
+  FROM events_early
   GROUP BY user_pseudo_id, first_date
 ),
 segments AS (
   SELECT
     *,
     CASE
-      WHEN purchase_72h = 1 THEN 'buyer_72h'
-      WHEN begin_checkout_72h = 1 THEN 'checkout_intent_72h'
-      WHEN view_item_72h = 1 AND scroll_72h = 1 THEN 'product_viewer_scroll_72h'
-      WHEN view_item_72h = 1 AND scroll_72h = 0 THEN 'product_viewer_no_scroll_72h'
-      WHEN search_72h = 1 AND view_item_72h = 0 THEN 'searcher_only_72h'
-      ELSE 'low_engagement_72h'
-    END AS segment_72h
+      WHEN purchase_early = 1 THEN 'buyer_early'
+      WHEN begin_checkout_early = 1 THEN 'checkout_intent_early'
+      WHEN view_item_early = 1 AND scroll_early = 1 THEN 'product_viewer_scroll_early'
+      WHEN view_item_early = 1 AND scroll_early = 0 THEN 'product_viewer_no_scroll_early'
+      WHEN search_early = 1 AND view_item_early = 0 THEN 'searcher_only_early'
+      ELSE 'low_engagement_early'
+    END AS segment_early
   FROM user_features
 ),
 activity_by_day AS (
@@ -87,13 +87,13 @@ activity_by_day AS (
     PARSE_DATE('%Y%m%d', event_date) AS activity_date
   FROM `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`
 ),
-post72h_retention AS (
+post_window_retention AS (
   SELECT
     s.user_pseudo_id,
     MAX(CASE
       WHEN a.activity_date BETWEEN DATE_ADD(s.first_date, INTERVAL 4 DAY)
                               AND DATE_ADD(s.first_date, INTERVAL 30 DAY)
-      THEN 1 ELSE 0 END) AS retained_post72h_d30
+      THEN 1 ELSE 0 END) AS retained_post_window_d30
   FROM segments s
   LEFT JOIN activity_by_day a
     ON a.user_pseudo_id = s.user_pseudo_id
@@ -102,19 +102,19 @@ post72h_retention AS (
 SELECT
   s.user_pseudo_id,
   s.first_date,
-  s.segment_72h,
+  s.segment_early,
 
-  s.search_72h,
-  s.view_item_72h,
-  s.scroll_72h,
-  s.add_to_cart_72h,
-  s.begin_checkout_72h,
-  s.purchase_72h,
+  s.search_early,
+  s.view_item_early,
+  s.scroll_early,
+  s.add_to_cart_early,
+  s.begin_checkout_early,
+  s.purchase_early,
 
-  s.sessions_72h,
-  s.view_item_events_72h,
+  s.sessions_early,
+  s.view_item_events_early,
 
-  r.retained_post72h_d30
+  r.retained_post_window_d30
 FROM segments s
-JOIN post72h_retention r
+JOIN post_window_retention r
   ON s.user_pseudo_id = r.user_pseudo_id;
