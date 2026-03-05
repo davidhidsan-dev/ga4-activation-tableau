@@ -273,3 +273,7 @@ This suggests the main bottleneck is **product discovery** (Search → View item
 ## EN — Transparency note (AI)
 This is one of my first end-to-end product analytics portfolio projects.  
 I used **ChatGPT/AI as support** to iterate on documentation, naming, and query structure (while I executed the work, validated results, and made the analytical decisions).
+
+## Dashboard
+
+[![Dashboard preview](docs/images/dashboard.png)](https://public.tableau.com/views/EarlyActivationEarlyBehaviorGA4EcommerceD0D3/Dashboard1?:language=es-ES&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link)
