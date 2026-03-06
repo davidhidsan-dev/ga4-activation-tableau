@@ -64,6 +64,28 @@ Calendar-day approximation using `event_date`: **D0–D3** from `first_date`.
 
 ---
 
+## 00b_sanity_add_to_cart_volume_by_day.sql
+
+### ES
+
+* **Qué hace:** cuenta el volumen diario de eventos `add_to_cart` por `event_date`.
+* **Para qué sirve:** detectar días con volumen **cero o muy bajo** de `add_to_cart` (días “sin oportunidad”), que pueden distorsionar la activación por cohorte (`first_date`).
+* **Output:** tabla con:
+
+  * `event_date`
+  * `add_to_cart_events`
+
+### EN
+
+* **What it does:** counts daily `add_to_cart` event volume by `event_date`.
+* **Why it matters:** identifies days with **zero or very low** `add_to_cart` volume (“no-opportunity days”), which can distort activation-by-cohort (`first_date`) analysis.
+* **Output:** table with:
+
+  * `event_date`
+  * `add_to_cart_events`
+
+---
+
 ## 01_activation_add_to_cart_early.sql
 
 ### ES

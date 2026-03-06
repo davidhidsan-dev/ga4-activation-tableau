@@ -16,8 +16,8 @@ Esto provoca cohortes con “cero oportunidad” real de activar y distorsiona c
 
 **Trazabilidad (SQL):**
 
-* Activación por cohorte: `02_activation_add_to_cart_72h_by_cohort.sql` *(ajusta el nombre si lo renombraste a “early”)*
-* Conteo de eventos por día (sanity): *(query no versionada)*
+* Activación por cohorte: `02_activation_add_to_cart_early_by_cohort.sql`
+* Conteo de eventos por día (sanity): `00b_sanity_add_to_cart_volume_by_day.sql`
 
 ---
 
@@ -37,5 +37,5 @@ This creates “no-opportunity” cohorts and makes time comparisons misleading.
 
 **Traceability (SQL):**
 
-* Cohort activation: `02_activation_add_to_cart_72h_by_cohort.sql` *(rename here if you switched it to “early”)*
-* Daily event volume check (sanity): *(not versioned)*
+* Cohort activation: `02_activation_add_to_cart_early_by_cohort.sql`
+* Daily event volume check (sanity): `00b_sanity_add_to_cart_volume_by_day.sql`
