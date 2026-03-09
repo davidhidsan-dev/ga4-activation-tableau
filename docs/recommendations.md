@@ -1,135 +1,135 @@
 # Recommendations / Recomendaciones
 
-## ES — Insight 1: “Searcher-only” es el cuello de botella (descubrimiento)
+## ES — Insight 1: `searcher_only_early` concentra el problema de descubrimiento
 
-* El segmento `searcher_only_early` casi no llega a `view_item` (Search → Product View ~0.32% por sesión).
-* Si el usuario no ve producto, es muy difícil que llegue a `add_to_cart`.
+- El segmento `searcher_only_early` casi no llega a `view_item` (Search → Product View ~0.32% por sesión).
+- Si un usuario no llega a ver producto, es poco probable que termine en `add_to_cart` dentro de la ventana temprana.
 
-**Acción recomendada**
+**Qué podría probarse**
 
-* Mejorar búsqueda: relevancia, ranking, sugerencias/autocompletado, “productos relacionados” y un buen fallback cuando no hay resultados.
+- Ajustes en búsqueda: relevancia y ranking, sugerencias/autocompletado, módulos de “productos relacionados” y un fallback útil cuando no hay resultados.
 
 **Métricas a seguir**
 
-* Search → Product View rate (session-level).
-* % de usuarios que pasan de `searcher_only_early` a un comportamiento “viewer” (ver producto) dentro de la ventana temprana (D0–D3).
+- Search → Product View rate (session-level).
+- % de usuarios que pasan de `searcher_only_early` a un comportamiento “viewer” (ver producto) dentro de la ventana temprana (D0–D3).
 
 ---
 
-## ES — Insight 2: engagement en PDP (scroll) se asocia a mayor activación
+## ES — Insight 2: el scroll en PDP se asocia con mayor `add_to_cart`
 
-* Los usuarios que ven producto **y** hacen `scroll` (`viewer_scroll`) activan mucho más que los que ven producto sin scroll (`viewer_no_scroll`).
-  * Ejemplo observado: ~**28.8%** vs ~**11.7%** de `add_to_cart` (ventana temprana).
+- Entre usuarios que ven producto, los que hacen `scroll` (`viewer_scroll`) activan bastante más que los que no hacen scroll (`viewer_no_scroll`).
+  - Ejemplo observado: ~**28.8%** vs ~**11.7%** de `add_to_cart` (ventana temprana).
 
-**Acción recomendada**
+**Qué podría probarse**
 
-* Mejorar la PDP para “no-scroll”:
-  * Contenido clave arriba (precio, CTA visible, info de envío/devoluciones).
-  * Layout más claro y rápido (performance).
-  * “Sticky add to cart” y recomendaciones relevantes cerca del CTA.
+- Cambios en PDP para reducir el “no-scroll”:
+  - Información clave arriba (precio, CTA visible, envío/devoluciones).
+  - Mejoras de performance y layout (carga, estabilidad, jerarquía).
+  - “Sticky add to cart” y recomendaciones cerca del CTA.
 
 **Métricas a seguir**
 
-* Activación por grupo `viewer_scroll` vs `viewer_no_scroll`.
-* Tasa de scroll en PDP y/o “profundidad” de scroll (si está disponible).
+- Activación por grupo `viewer_scroll` vs `viewer_no_scroll`.
+- Tasa de scroll en PDP y/o profundidad de scroll (si está disponible).
 
 ---
 
-## ES — Insight 3: la activación ocurre mayoritariamente en D0 (primer día)
+## ES — Insight 3: la activación se concentra en D0
 
-* La gran mayoría de usuarios que activan `add_to_cart` lo hacen el **primer día (D0)**.
-  * Ejemplo observado: activación D0 ~**4.60%** vs D1–D3 ~**0.55%** (usuarios únicos).
+- La mayoría de usuarios que activan `add_to_cart` lo hacen en **D0** (mismo día que `first_date`).
+  - Ejemplo observado: D0 ~**4.60%** vs D1–D3 ~**0.55%** (usuarios únicos).
 
-**Acción recomendada**
+**Qué podría probarse**
 
-* Priorizar mejoras que impacten la **primera visita**:
-  * Reducir fricción hasta `add_to_cart` (UX, claridad de oferta, confianza, performance).
-  * Mejorar descubrimiento rápido (búsqueda + recomendaciones).
-  * Asegurar que el CTA y la selección de variantes (talla/color) sean “sin esfuerzo” en móvil.
+- Mejoras enfocadas en la primera visita:
+  - Reducir fricción hasta `add_to_cart` (UX, claridad de la oferta, señales de confianza, performance).
+  - Descubrimiento rápido (búsqueda + recomendaciones).
+  - CTA y selección de variantes (talla/color) lo más “sin esfuerzo” posible en móvil.
 
 **Métricas a seguir**
 
-* Activación D0 vs activación D1–D3 (usuarios únicos).
-* Drop-offs en el funnel secuencial (por usuario) dentro de la ventana temprana.
+- Activación D0 vs activación D1–D3 (usuarios únicos).
+- Caídas del funnel secuencial (por usuario) dentro de la ventana temprana.
 
 ---
 
 ## ES — Calidad (check)
 
-* Activar `add_to_cart` dentro de la ventana temprana se asocia a mayor retención post-ventana (D4–D30).
-  * Útil como señal de “calidad” sin mezclar el retorno inmediato del periodo temprano.
+- Activar `add_to_cart` en la ventana temprana se asocia con mayor retención post-ventana (D4–D30).
+  - Se puede usar como señal de “calidad” sin solapar con D0–D3.
 
 ---
 
 ## ES — Nota sobre estimaciones
 
-Los escenarios “what-if” son descriptivos (sirven para priorizar hipótesis), pero **no prueban causalidad**. Validar con experimentos (A/B tests).
+Los escenarios “what-if” son **descriptivos**: ayudan a priorizar hipótesis, pero **no** prueban causalidad. Para validar, harían falta experimentos (A/B tests).
 
 ---
 
 # EN — Recommendations
 
-## EN — Insight 1: “Searcher-only” is the discovery bottleneck
+## EN — Insight 1: `searcher_only_early` concentrates the discovery issue
 
-* Segment `searcher_only_early` almost never reaches `view_item` (Search → Product View ~0.32% per session).
-* If users don’t see products, it’s very hard to reach `add_to_cart`.
+- Segment `searcher_only_early` almost never reaches `view_item` (Search → Product View ~0.32% per session).
+- If a user does not reach a product view, reaching `add_to_cart` within the early window becomes unlikely.
 
-**Recommended action**
+**What could be tested**
 
-* Improve search: relevance, ranking, suggestions/autocomplete, related products, and a strong “no results” fallback.
+- Search improvements: relevance and ranking, suggestions/autocomplete, related products modules, and a useful “no results” fallback.
 
 **Metrics to track**
 
-* Search → Product View rate (session-level).
-* % of users shifting from `searcher_only_early` to a “viewer-like” behavior (product views) within the early window (D0–D3).
+- Search → Product View rate (session-level).
+- % of users shifting from `searcher_only_early` to “viewer-like” behavior (product views) within the early window (D0–D3).
 
 ---
 
-## EN — Insight 2: PDP engagement (scroll) correlates with higher activation
+## EN — Insight 2: PDP scroll correlates with higher `add_to_cart`
 
-* Users who view a product **and** scroll (`viewer_scroll`) activate far more than product viewers with no scroll (`viewer_no_scroll`).
-  * Observed example: ~**28.8%** vs ~**11.7%** `add_to_cart` (early window).
+- Among product viewers, users who scroll (`viewer_scroll`) activate much more than viewers with no scroll (`viewer_no_scroll`).
+  - Observed example: ~**28.8%** vs ~**11.7%** `add_to_cart` (early window).
 
-**Recommended action**
+**What could be tested**
 
-* Improve the PDP for “no-scroll” users:
-  * Put key info above the fold (price, visible CTA, shipping/returns).
-  * Faster, cleaner layout (performance).
-  * Sticky add-to-cart + relevant recommendations near the CTA.
+- PDP changes to reduce the “no-scroll” group:
+  - Key info above the fold (price, visible CTA, shipping/returns).
+  - Performance/layout improvements (load, stability, hierarchy).
+  - Sticky add-to-cart + relevant recommendations near the CTA.
 
 **Metrics to track**
 
-* Activation by `viewer_scroll` vs `viewer_no_scroll`.
-* PDP scroll rate and/or scroll depth (if available).
+- Activation by `viewer_scroll` vs `viewer_no_scroll`.
+- PDP scroll rate and/or scroll depth (if available).
 
 ---
 
-## EN — Insight 3: activation happens mostly on D0 (first day)
+## EN — Insight 3: activation is concentrated on D0
 
-* Most users who trigger `add_to_cart` do it on **day 0 (D0)**.
-  * Observed example: D0 activation ~**4.60%** vs D1–D3 ~**0.55%** (unique users).
+- Most users who trigger `add_to_cart` do it on **D0** (same day as `first_date`).
+  - Observed example: D0 ~**4.60%** vs D1–D3 ~**0.55%** (unique users).
 
-**Recommended action**
+**What could be tested**
 
-* Prioritize changes that impact the **first visit**:
-  * Reduce friction to `add_to_cart` (UX clarity, trust signals, performance).
-  * Improve fast discovery (search + recommendations).
-  * Make CTA + variant selection effortless on mobile.
+- Changes focused on the first visit:
+  - Reduce friction to `add_to_cart` (UX clarity, trust signals, performance).
+  - Faster discovery (search + recommendations).
+  - Make CTA + variant selection (size/color) as low-effort as possible on mobile.
 
 **Metrics to track**
 
-* D0 activation vs D1–D3 activation (unique users).
-* Drop-offs in the sequential (user-level) funnel within the early window.
+- D0 activation vs D1–D3 activation (unique users).
+- Drop-offs in the sequential (user-level) funnel within the early window.
 
 ---
 
 ## EN — Quality check
 
-* Early-window `add_to_cart` is associated with higher post-window retention (D4–D30).
-  * Useful as a quality signal without overlapping with the immediate early period.
+- Early-window `add_to_cart` is associated with higher post-window retention (D4–D30).
+  - Can be used as a “quality” signal without overlapping D0–D3.
 
 ---
 
 ## EN — Note on estimates
 
-“What-if” scenarios are descriptive (good for prioritizing hypotheses) but **not causal**. Validate via experiments (A/B tests).
+“What-if” scenarios are **descriptive**: useful for prioritization, but **not causal**. Validation requires experiments (A/B tests).

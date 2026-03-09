@@ -2,18 +2,18 @@
 
 ## ES — Qué hicimos
 **Objetivo del sprint**
-- Definir y calcular la métrica principal: **Activación temprana = % de usuarios con `add_to_cart` dentro de la ventana temprana (D0–D3)** desde su `first_date`.
+- Definir y calcular la métrica principal: **activación temprana = % de usuarios con `add_to_cart` dentro de la ventana temprana (D0–D3)** desde `first_date`.
 
 **Decisiones de alcance**
-- Detectamos que en ciertos días tempranos casi no existían eventos `add_to_cart`.
-- Para comparaciones justas, restringimos el análisis a: **`first_date >= 2020-11-25`**.
+- Vimos que había días (al inicio del periodo) con volumen muy bajo o cero de `add_to_cart`.
+- Para que las cohortes fueran comparables, acotamos el análisis a: **`first_date >= 2020-11-25`**.
 
 **Calidad de datos (validación mínima)**
-- Comprobamos que en el periodo analizado no hay nulos ni errores de parseo en:
+- Verificamos que, en el alcance elegido, no hay nulos ni problemas de parseo en:
   - `user_pseudo_id`, `event_date`, `event_name`.
 
 **Entregables (SQL)**
-- Activación global en ventana temprana (D0–D3).
+- KPI global de activación en ventana temprana (D0–D3).
 - Activación por cohorte (por `first_date`).
 
 **Resultado clave**
@@ -23,14 +23,14 @@
 
 ## EN — What we did
 **Sprint goal**
-- Define and compute the primary metric: **Early activation = % of users with `add_to_cart` within the early window (D0–D3)** since `first_date`.
+- Define and compute the primary metric: **early activation = % of users with `add_to_cart` within the early window (D0–D3)** since `first_date`.
 
 **Scope decisions**
-- We observed early days with near-zero `add_to_cart` volume.
-- To ensure fair comparisons, we restricted scope to: **`first_date >= 2020-11-25`**.
+- We saw days (early in the period) with very low or zero `add_to_cart` volume.
+- To make cohorts comparable, we restricted scope to: **`first_date >= 2020-11-25`**.
 
 **Data quality (minimal validation)**
-- Confirmed no nulls or parsing issues in-scope for:
+- We checked that, within the chosen scope, there are no nulls or date parsing issues for:
   - `user_pseudo_id`, `event_date`, `event_name`.
 
 **Deliverables (SQL)**
@@ -38,4 +38,4 @@
 - Cohort activation by `first_date`.
 
 **Key result**
-- Global activation (early window D0–D3) in filtered period: ~**4.93%**.
+- Global activation (early window D0–D3) in the filtered period: ~**4.93%**.

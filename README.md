@@ -2,8 +2,26 @@
 
 > English version: [README_EN.md](README_EN.md)
 
-## Resumen ejecutivo
-**Objetivo de negocio:** aumentar la **activación temprana** (usuarios que añaden al carrito en su primera ventana de comportamiento) e identificar **dónde se pierde** el usuario en el journey de búsqueda.
+## Navegación rápida
+- Dashboard público: https://public.tableau.com/views/EarlyActivationEarlyBehaviorGA4EcommerceD0D3/Dashboard1?:language=es-ES&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link
+- Metodología: [`docs/methodology.md`](docs/methodology.md)
+- Brief del proyecto: [`docs/project_brief.md`](docs/project_brief.md)
+- Catálogo SQL: [`docs/sql_catalog.md`](docs/sql_catalog.md)
+- Guía del dashboard: [`docs/dashboard_guide.md`](docs/dashboard_guide.md)
+- Resumen ejecutivo: [`reports/executive_summary.md`](reports/executive_summary.md)
+- Limitaciones y siguientes pasos: [`reports/limitations_and_next_steps.md`](reports/limitations_and_next_steps.md)
+
+## Cómo leer este proyecto
+Si quieres una visión rápida:
+1. Lee este README
+2. Abre el dashboard
+3. Revisa el resumen ejecutivo
+4. Si quieres más detalle técnico: metodología + SQL catalog
+
+---
+
+## Resumen
+Este proyecto analiza **comportamiento temprano** de usuarios en un ecommerce (dataset público GA4) para entender qué señales se asocian con **activar** (hacer `add_to_cart`) y dónde se observa más caída en el flujo de **búsqueda → producto**.
 
 **Dataset:** GA4 public sample ecommerce (BigQuery).  
 **Cohorte (scope):** `first_date >= 2020-11-25`.  
@@ -12,21 +30,25 @@
 **Métrica principal:** **Add-to-cart rate (early window)** (usuarios únicos).  
 **Métricas de diagnóstico:** Search → Product View rate (session-level), funnel secuencial de búsqueda, activación por segmentos tempranos y calibración de un modelo de propensión (BigQuery ML).
 
-**Insights clave (high-level):**
-- La mayor caída del funnel ocurre en **Search → View item** (bottleneck de descubrimiento).
-- Señales de engagement en PDP (view_item + scroll) se asocian a mayor activación.
-- El modelo de propensión ordena usuarios por probabilidad de activación y sirve para priorizar tests (no causal).
+**Observaciones principales (a alto nivel):**
+- En el funnel de búsqueda, la mayor caída se observa en **Search → View item**.
+- En PDP, señales de engagement (p.ej. `view_item` + `scroll`) se asocian con mayor activación.
+- El modelo de propensión ordena usuarios por probabilidad de activación; se usa como apoyo para priorización (no implica causalidad).
 
-**Acciones recomendadas (prioridad):**
-1) Mejorar **Search → View item** (relevancia, sugerencias, ranking, UX “no results”).  
-2) Aumentar engagement en PDP (layout, performance, CTA visible, recomendaciones).  
-3) Usar deciles de propensión para priorizar experimentos/personalización.
+**Recomendaciones (en términos de hipótesis a validar):**
+1) Explorar mejoras en **Search → View item** (relevancia, ranking, sugerencias, UX “no results”).  
+2) Explorar mejoras en PDP (layout, performance, CTA visible, recomendaciones).  
+3) Usar deciles de propensión para priorizar análisis/experimentos (no causal).
+
+---
+
+## Alcance del proyecto
+Este repo está planteado como un **proyecto de portfolio** orientado a analítica de producto: definición de métricas, segmentación por comportamiento, funnels, un baseline de ML en BigQuery ML y un dashboard final en Tableau.  
+No es un pipeline productivo ni un sistema de scoring desplegado.
 
 ---
 
 ## Arquitectura del proyecto / Data Flow
-Flujo general del proyecto:
-
 GA4 Public Dataset (BigQuery)  
 ↓  
 SQL transformations (cohort definition, feature engineering, segmentación)  
@@ -42,7 +64,7 @@ Las tablas finales se exportan como datasets agregados para visualización en Ta
 
 ---
 
-## Modelo de datos (simplificado)
+## Feature table (simplificado)
 Las tablas analíticas principales se construyen a **nivel usuario** usando `user_pseudo_id`.
 
 Tabla conceptual (features early window, D0–D3):
@@ -58,7 +80,7 @@ Tabla conceptual (features early window, D0–D3):
 | sessions_early | Nº de sesiones (por `ga_session_id`) en la ventana temprana |
 | view_item_events_early | Nº de eventos `view_item` en la ventana temprana |
 | segment_early | Segmento por reglas (buyer, checkout_intent, viewer_scroll, …) |
-| retained_post_window_d30 | Actividad en D4–D30 (métrica de “calidad”) |
+| retained_post_window_d30 | Actividad en D4–D30 (métrica post-ventana) |
 
 Estas features se usan para:
 - segmentación temprana
@@ -69,15 +91,15 @@ Estas features se usan para:
 ---
 
 ## Modelo de propensión (overview)
-Se entrena un modelo baseline de **regresión logística** usando BigQuery ML para:
+Se entrena un modelo baseline de **regresión logística** usando BigQuery ML.
 
 **Objetivo:** predecir la probabilidad de que un usuario haga `add_to_cart` durante la ventana temprana (D0–D3).  
 **Features:** flags de comportamiento (search, view_item, scroll, checkout/purchase), contadores ligeros (sesiones, eventos).  
-**Evaluación / lectura:** se generan **deciles de propensión** (`NTILE(10)`) sobre la probabilidad predicha para observar:
+**Lectura:** se generan **deciles de propensión** (`NTILE(10)`) sobre la probabilidad predicha para observar:
 - ranking de usuarios por probabilidad de activación
-- calibración entre probabilidad predicha y tasa real de activación
+- relación entre probabilidad predicha y tasa real de activación
 
-El modelo se usa como **herramienta de priorización**, no como sistema predictivo en producción.
+El modelo se usa como **baseline de análisis/priorización**, no como sistema predictivo en producción.
 
 ---
 
@@ -93,7 +115,7 @@ Ejemplo de métricas observadas (scope: `first_date >= 2020-11-25`):
 | Post-window retention (D4–D30) — activados | ~14.80% |
 | Post-window retention (D4–D30) — no activados | ~3.55% |
 
-Esto sugiere que el principal bottleneck está en **descubrimiento de producto** (Search → View item) y que activar en ventana temprana se asocia a **mayor “calidad”** post-ventana.
+Interpretación prudente: los números sugieren que el principal punto de caída está en **descubrimiento de producto** (Search → View item). Además, activar en ventana temprana se asocia con mayor actividad post-ventana (esto no implica causalidad).
 
 ---
 
@@ -109,35 +131,40 @@ Esto sugiere que el principal bottleneck está en **descubrimiento de producto**
 - `/reports` → narrativa y resultados
 
 ## Cómo reproducir (rápido)
-1) Ejecutar las queries en BigQuery (ver `/sql`).
-2) Exportar salidas “BI-ready” a CSV para Tableau Public (considerando límites de filas).
+1) Ejecutar las queries en BigQuery (ver `/sql`).  
+2) Exportar salidas “BI-ready” a CSV para Tableau Public (considerando límites de filas).  
 3) Construir el dashboard en Tableau usando los CSV exportados.
-
-## Dashboard
-- Dashboard (Tableau Public): https://public.tableau.com/views/EarlyActivationEarlyBehaviorGA4EcommerceD0D3/Dashboard1?:language=es-ES&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link
 
 ---
 
 ## Skills demostradas en el proyecto
 - SQL analítico (BigQuery)
-- Análisis de producto (cohortes, funnels, segmentación)
+- Cohortes, funnels y segmentación por comportamiento
 - Feature engineering a nivel usuario
-- Modelado básico de ML (BigQuery ML)
-- Visualización y storytelling (Tableau)
+- Modelado ML baseline (BigQuery ML)
+- Visualización (Tableau)
 - Documentación técnica y trazabilidad
-- Diagnóstico de métricas de producto
 
-## Aprendizajes del proyecto
-- Definición de métricas de activación y ventanas temporales
-- Diagnóstico de funnels de usuario y puntos de fricción
-- Uso de proxies (session-level vs user-level)
-- Diferencia entre correlación y causalidad (what-if no causal)
-- Importancia de documentar limitaciones analíticas
+## Aprendizajes
+- Definición de métricas y ventanas temporales
+- Diferencias entre user-level y session-level
+- Funnels secuenciales y lectura de drop-offs
+- Correlación vs causalidad (what-if no causal)
+- Importancia de documentar scope y limitaciones
+
+## Posibles mejoras técnicas (v2)
+- Definir una ventana “72h real” usando `event_timestamp` (en vez de aproximación por `event_date`) y comparar resultados.
+- Separar más explícitamente ventana de observación (features) vs ventana de outcome (label) para evitar ambigüedades.
+- Añadir segmentación por dispositivo/canal (si estuviera disponible) para comparar patrones.
+- Probar un baseline adicional en BQML (p.ej. boosted trees) y evaluar con un split temporal (no solo random).
+
+---
 
 ## Nota de transparencia (IA)
 Este es uno de mis primeros proyectos end-to-end de analítica de producto.  
 He utilizado **ChatGPT/IA como apoyo** para iterar sobre documentación, naming y estructura de queries (manteniendo yo la ejecución, validación de resultados y decisiones analíticas).
 
-## Dashboard
+---
 
+## Dashboard
 [![Dashboard preview](docs/images/dashboard.png)](https://public.tableau.com/views/EarlyActivationEarlyBehaviorGA4EcommerceD0D3/Dashboard1?:language=es-ES&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link)

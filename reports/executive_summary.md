@@ -2,92 +2,72 @@
 
 ## ES — Contexto y objetivo
 
-Este proyecto analiza el comportamiento temprano (**early window: D0–D3**) en un ecommerce (GA4 sample) para entender qué explica la **activación temprana**.
+Este proyecto analiza comportamiento temprano (**early window: D0–D3**) en un ecommerce (GA4 sample) para ver qué señales se asocian con **activación temprana** (add to cart).
 
-* **Cohorte:** `first_date >= 2020-11-25`
-* **Ventana temprana (early window):** D0–D3 desde `first_date` (aprox. por día calendario)
-* **Métrica principal:** **Add-to-cart rate (early window)** (usuarios únicos)
+- **Cohorte (scope):** `first_date >= 2020-11-25`
+- **Ventana temprana:** D0–D3 desde `first_date` (aprox. por día calendario con `event_date`)
+- **Métrica principal:** **Add-to-cart rate (early window)** (usuarios únicos)
 
-## ES — Qué encontramos
+## ES — Qué observamos
 
-1. **Cuello de botella en descubrimiento**
+1) **Problema de descubrimiento (búsqueda)**  
+- En usuarios que usan búsqueda, la mayor caída del funnel aparece en **Search → View item**.  
+- El segmento `searcher_only` es especialmente extremo: casi no llega a páginas de producto.
 
-* En usuarios que usan búsqueda, el mayor drop del funnel es **Search → View item**.
-* El segmento `searcher_only` muestra un comportamiento crítico: casi no llega a páginas de producto.
+2) **Señales de engagement en PDP**  
+- `product_viewer_scroll` activa bastante más que `product_viewer_no_scroll`.  
+- Una lectura posible es que cambios en PDP (contenido “above the fold”, layout, performance, CTA visible) podrían influir en la probabilidad de `add_to_cart` (esto no implica causalidad).
 
-2. **Engagement en PDP importa**
+3) **Calidad (post-window)**  
+- Los usuarios activados tienden a tener más actividad post-window (D4–D30).  
+- Se usa como métrica secundaria sin solapar con la ventana temprana.
 
-* `product_viewer_scroll` activa significativamente más que `product_viewer_no_scroll`.
-* Esto sugiere que mejorar experiencia en PDP (contenido, layout, velocidad) puede aumentar activación.
+## ES — Qué podría probarse (hipótesis)
 
-3. **Calidad (post-window)**
+- **Búsqueda (Search → View item):** relevancia/ranking, sugerencias/autocompletado, fallback en “0 results”, módulos de productos relacionados.  
+- **PDP (scroll/engagement):** CTA visible (sticky), info clave arriba, mejoras de performance, recomendaciones cerca del CTA.  
+- **Propensión (ML):** usar deciles para priorizar análisis/segmentación de usuarios y definir tests (no es un sistema productivo).
 
-* Los usuarios activados tienden a mostrar mayor actividad post-window (D4–D30), usado como métrica secundaria sin solapamiento.
+## ES — Cómo medir cambios
 
-## ES — Acciones recomendadas (prioridad)
-
-**P1 — Mejorar Search → View item**
-
-* Relevancia y ranking, sugerencias/autocompletado, fallback en “0 results”, módulos de productos relacionados.
-
-**P2 — Mejorar PDP para elevar scroll/engagement**
-
-* CTA visible (sticky), info clave arriba, optimización de performance, recomendaciones.
-
-**P3 — Priorización con propensión**
-
-* Usar deciles del modelo para priorizar experimentos y personalización (sin necesidad de “deploy” productivo).
-
-## ES — Cómo medir impacto
-
-* Add-to-cart rate (early window)
-* Search → Product View rate (session-level)
-* Distribución de segmentos (¿baja `searcher_only`? ¿suben viewers?)
-* Funnel drop-offs (Search → View item y View item → Add to cart)
+- Add-to-cart rate (early window)
+- Search → Product View rate (session-level)
+- Distribución de segmentos (¿baja `searcher_only`? ¿suben viewers?)
+- Funnel drop-offs (Search → View item y View item → Add to cart)
 
 ---
 
 ## EN — Context and goal
 
-This project analyzes early behavior (**early window: D0–D3**) in an ecommerce dataset (GA4 sample) to understand **early activation** drivers.
+This project analyzes early behavior (**early window: D0–D3**) in an ecommerce dataset (GA4 sample) to understand which signals correlate with **early activation** (add to cart).
 
-* **Cohort:** `first_date >= 2020-11-25`
-* **Early window:** D0–D3 from `first_date` (calendar-day approximation)
-* **North-star metric:** **Add-to-cart rate (early window)** (unique users)
+- **Cohort (scope):** `first_date >= 2020-11-25`
+- **Early window:** D0–D3 from `first_date` (calendar-day approximation using `event_date`)
+- **North-star metric:** **Add-to-cart rate (early window)** (unique users)
 
-## EN — What we found
+## EN — What we observed
 
-1. **Discovery bottleneck**
+1) **Discovery issue (search)**  
+- For search users, the largest funnel drop appears at **Search → View item**.  
+- The `searcher_only` segment is particularly extreme: users rarely reach product pages.
 
-* For search users, the main funnel drop is **Search → View item**.
-* The `searcher_only` segment is critical: users rarely reach product pages.
+2) **PDP engagement signals**  
+- `product_viewer_scroll` activates much more than `product_viewer_no_scroll`.  
+- One possible reading is that PDP changes (above-the-fold content, layout, performance, visible CTA) could affect `add_to_cart` likelihood (this is not causal).
 
-2. **PDP engagement matters**
+3) **Quality (post-window)**  
+- Activated users tend to show higher post-window activity (D4–D30).  
+- This is used as a secondary, non-overlapping quality metric.
 
-* `product_viewer_scroll` activates far more than `product_viewer_no_scroll`.
-* This suggests PDP UX/performance improvements can lift activation.
+## EN — What could be tested (hypotheses)
 
-3. **Quality (post-window)**
+- **Search (Search → View item):** relevance/ranking, suggestions/autocomplete, “0 results” fallback, related items modules.  
+- **PDP (scroll/engagement):** visible CTA (sticky), key info above the fold, performance improvements, recommendations near the CTA.  
+- **Propensity (ML):** use deciles to prioritize analysis/targeting and define tests (not a production system).
 
-* Activated users tend to show higher post-window activity (D4–D30), used as a non-overlapping secondary metric.
+## EN — How to measure changes
 
-## EN — Recommended actions (priority)
-
-**P1 — Improve Search → View item**
-
-* Relevance/ranking, suggestions/autocomplete, “0 results” fallback, related items modules.
-
-**P2 — Improve PDP to lift scroll/engagement**
-
-* Visible CTA (sticky), key info above the fold, performance, recommendations.
-
-**P3 — Propensity-based prioritization**
-
-* Use model deciles to prioritize experiments/personalization (no production deployment required).
-
-## EN — How to measure impact
-
-* Add-to-cart rate (early window)
-* Search → Product View rate (session-level)
-* Segment distribution shifts (down `searcher_only`, up viewer segments)
-* Funnel drop-offs (Search → View item and View item → Add to cart)
+- Add-to-cart rate (early window)
+- Search → Product View rate (session-level)
+- Segment distribution shifts (down `searcher_only`, up viewer segments)
+- Funnel drop-offs (Search → View item and View item → Add to cart)
