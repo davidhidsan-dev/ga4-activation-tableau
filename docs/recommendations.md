@@ -2,8 +2,8 @@
 
 ## ES — Insight 1: `searcher_only_early` concentra el problema de descubrimiento
 
-- El segmento `searcher_only_early` casi no llega a `view_item` (Search → Product View ~0.32% por sesión).
-- Si un usuario no llega a ver producto, es poco probable que termine en `add_to_cart` dentro de la ventana temprana.
+- `searcher_only_early` se define como usuarios que, en la ventana temprana (D0–D3), hicieron búsqueda (`view_search_results`) pero no llegaron a `view_item`.
+- Al medir **Search → Product View a nivel sesión (global)** para este grupo (query 06b), el ratio sigue siendo muy bajo (~0.32% por sesión). Esto sugiere que, incluso fuera de D0–D3, sus sesiones con búsqueda rara vez terminan en páginas de producto.
 
 **Qué podría probarse**
 
@@ -11,8 +11,8 @@
 
 **Métricas a seguir**
 
-- Search → Product View rate (session-level).
-- % de usuarios que pasan de `searcher_only_early` a un comportamiento “viewer” (ver producto) dentro de la ventana temprana (D0–D3).
+- Search → Product View rate (session-level, global).
+- Tamaño de `searcher_only_early` y % de usuarios que pasan a un comportamiento “viewer” (ver producto) dentro de la ventana temprana (D0–D3).
 
 ---
 
@@ -71,17 +71,17 @@ Los escenarios “what-if” son **descriptivos**: ayudan a priorizar hipótesis
 
 ## EN — Insight 1: `searcher_only_early` concentrates the discovery issue
 
-- Segment `searcher_only_early` almost never reaches `view_item` (Search → Product View ~0.32% per session).
-- If a user does not reach a product view, reaching `add_to_cart` within the early window becomes unlikely.
+- `searcher_only_early` is defined as users who, within the early window (D0–D3), performed search (`view_search_results`) but did not reach `view_item`.
+- When we measure **Search → Product View at session level (global)** for this group (query 06b), the ratio is still very low (~0.32% per session). This suggests that even outside D0–D3, their search sessions rarely end in product pages.
 
-**What could be tested**
+**What we could test**
 
-- Search improvements: relevance and ranking, suggestions/autocomplete, related products modules, and a useful “no results” fallback.
+- Search flow improvements: relevance and ranking, suggestions/autocomplete, related products modules, and a useful fallback when there are no results.
 
 **Metrics to track**
 
-- Search → Product View rate (session-level).
-- % of users shifting from `searcher_only_early` to “viewer-like” behavior (product views) within the early window (D0–D3).
+- Search → Product View rate (session-level, global).
+- Size of `searcher_only_early` and the % of users shifting to “viewer-like” behavior (reaching product views) within D0–D3.
 
 ---
 
